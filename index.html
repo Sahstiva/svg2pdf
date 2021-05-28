@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/pdfkit@0.10.0/js/pdfkit.standalone.js"></script>
+    <script src="https://bundle.run/blob-stream@0.1.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/svg-to-pdfkit@0.1.8/source.js"></script>
+    <title>SVG2PDF</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-6 offset-3 mt-5 d-flex justify-content-center">
+        <button onclick="actionSVG()" type="button">
+            <div id="containerSVG">
+                <svg width="400" height="300" id="actionSVG"
+                     xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect x="0" y="0" width="400" height="300" style="fill:white" />
+                    <rect x="66" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="72" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="78" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="88" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="96" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="102" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="110" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="116" y="20" width="8" height="170" style="fill:black" />
+                    <rect x="128" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="132" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="140" y="20" width="8" height="170" style="fill:black" />
+                    <rect x="150" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="154" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="158" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="164" y="20" width="6" height="170" style="fill:black" />
+                    <rect x="176" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="184" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="190" y="20" width="6" height="170" style="fill:black" />
+                    <rect x="198" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="204" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="208" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="220" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="226" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="232" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="242" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="246" y="20" width="6" height="170" style="fill:black" />
+                    <rect x="254" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="264" y="20" width="8" height="170" style="fill:black" />
+                    <rect x="276" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="282" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="286" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="294" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="304" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="308" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="318" y="20" width="6" height="170" style="fill:black" />
+                    <rect x="326" y="20" width="2" height="170" style="fill:black" />
+                    <rect x="330" y="20" width="4" height="170" style="fill:black" />
+                    <rect x="20" y="200" width="350" height="90" style="fill:black" />
+                    <text x="30" y="240" style="fill:white;font-size:30pt;text-anchor:start" >282116</text>
+                    <text x="350" y="270" style="fill:white;font-size:50pt;text-anchor:end" >2656</text>
+                </svg>
+            </div>
+        </button>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-6 offset-3">
+        <div class="form-file">
+            <input type="file" class="form-file-input" id="customFile" onchange="changeSVG()">
+            <label class="form-file-label" for="customFile">
+                <span class="form-file-text">Choose file...</span>
+                <span class="form-file-button">Browse</span>
+            </label>
+        </div>
+    </div>
+</div>
+<script>
+    function changeSVG() {
+        let svgContainer = document.querySelector("#actionSVG");
+        let fileInput = document.querySelector("#customFile");
+        let file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file, 'windows-1251');
+        reader.onload = () => svgContainer.innerHTML = `${reader.result}`;
+    }
+    function actionSVG() {
+        let svg = document.querySelector("#actionSVG");
+        downloadPDF(svg,'wildberries');
+    }
+    function downloadPDF(svg, outFileName) {
+        let doc = new PDFDocument({compress: true, size: [320, 240]});
+        let options = {
+            useCSS: true,
+            assumePt: true,
+            width: parseFloat(320),
+            height: parseFloat(240),
+            preserveAspectRatio: 'xMinYMin meet',
+            compress: true
+        };
+        SVGtoPDF(doc, svg, 0, 0, options);
+        let stream = doc.pipe(blobStream());
+        stream.on('finish', () => {
+            let blob = stream.toBlob('application/pdf');
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = outFileName + ".pdf";
+            link.click();
+        });
+        doc.end();
+    }
+</script>
+</body>
+</html>
